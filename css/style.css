@@ -1,0 +1,109 @@
+:root {
+  --red: hsl(14, 86%, 42%);
+  --green: hsl(159, 69%, 38%);
+  --rose-50: hsl(20, 50%, 98%);
+  --rose-100: hsl(13, 31%, 94%);
+  --rose-300: hsl(14, 25%, 72%);
+  --rose-400: hsl(7, 20%, 60%);
+  --rose-500: hsl(12, 20%, 44%);
+  --rose-900: hsl(14, 65%, 9%);
+}
+
+body {
+  font-family: "Red Hat Text", sans-serif;
+  background-color: var(--rose-50);
+}
+
+.main-wrapper {
+  margin: 0 20px;
+}
+
+h1 {
+  color:var(--rose-900)
+}
+
+.img-box {
+  position: relative;
+  width: 100%;
+}
+
+.img-box img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.add-to-cart {
+  position: absolute;
+  bottom: -34px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid var(--rose-400);
+  background-color: #fff;
+  font-weight: 600;
+  font-size: 0.8rem;
+  width: 140px;
+  height: 38px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
+}
+
+.add-to-cart span {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+.add-to-cart span img {
+  width: 100%;
+  height: 100%;
+}
+
+.item-description {
+  margin: 35px 0;
+}
+
+.item-description div {
+  margin-bottom: 3px;
+}
+
+.item-cetrgory {
+  font-size: 0.9rem;
+  color: var(--rose-400);
+}
+
+.item-name {
+  color: var(--rose-500);
+  font-weight: 700;
+}
+
+.price {
+  color: var(--red);
+  font-weight: 600;
+}
+
+.cart {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 350px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.cart h2 {
+  display: flex;
+  align-self: flex-start;
+  color: var(--red);
+  margin-top: 0;
+
+}
+
+.empty-cart-message {
+  color: var(--rose-500)
+}
