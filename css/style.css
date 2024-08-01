@@ -36,6 +36,12 @@ h1 {
 .img-box img {
   width: 100%;
   border-radius: 10px;
+  border: 2px solid transparent;
+}
+
+/* Increase specificity */
+.img-box img.selected {
+  border: 2px solid var(--red);
 }
 
 .add-to-cart {
@@ -54,6 +60,44 @@ h1 {
   align-items: center;
   justify-content: center;
   justify-self: center;
+}
+
+.item-selected {
+  position: absolute;
+  bottom: -34px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  background-color: var(--red);
+  font-weight: 600;
+  font-size: 0.8rem;
+  width: 140px;
+  height: 38px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  justify-self: center;
+}
+
+.item-selected span {
+  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 18px;
+  height: 18px;
+  color: var(--rose-50);
+}
+
+.item-selected span:nth-child(odd) {
+  border: 1px solid var(--rose-50);
+  border-radius: 50%;
+}
+
+.item-selected span img {
+  width: 9px;
+  height: 9px;
 }
 
 .add-to-cart span {
