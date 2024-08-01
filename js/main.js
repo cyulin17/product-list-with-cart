@@ -34,8 +34,9 @@ function itemRender(itemData) {
   text.textContent = 'Add to Cart'
 
   span.appendChild(icon);
-  add.appendChild(text);
   add.appendChild(span);
+  add.appendChild(text);
+
 
   imgBox.appendChild(img);
   imgBox.appendChild(add);
