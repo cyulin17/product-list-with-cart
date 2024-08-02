@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 })
 
+//track items and quantity
+const cartItems = {};
+
 function itemRender(itemData) {
   const list = document.querySelector('.list');
 
@@ -59,32 +62,6 @@ function itemRender(itemData) {
   itemSelected.appendChild(quantitySpan);
   itemSelected.appendChild(incrementSpan);
 
-    add.addEventListener('click', () => {
-    add.style.display = 'none'; // Hide Add to Cart button
-    itemSelected.style.display = 'flex'; // Show Item Selected section
-    img.classList.add('selected');
-    quantitySpan.textContent = '1';
-  });
-
-  let quantity = 0;
-  decrementSpan.addEventListener('click', () => {
-    if (quantity >= 1) {
-      quantity--;
-      quantitySpan.textContent = quantity;
-    }
-
-    if (quantity == 0) {
-    add.style.display = 'flex';
-    itemSelected.style.display = 'none';
-    img.classList.remove('selected');
-    }
-  });
-
-  incrementSpan.addEventListener('click', () => {
-    quantity++;
-    quantitySpan.textContent = quantity;
-  });
-
   imgBox.appendChild(img);
   imgBox.appendChild(add);
   imgBox.appendChild(itemSelected);
@@ -109,4 +86,107 @@ function itemRender(itemData) {
   item.appendChild(description);
 
   list.appendChild(item);
+
+
+let quantity = 1;
+  add.addEventListener('click', () => {
+    add.style.display = 'none';
+    itemSelected.style.display = 'flex';
+    img.classList.add('selected');
+
+
+    quantitySpan.textContent = quantity;
+
+
+
+    updateCart(itemData.name, quantity, itemData.price);
+  });
+
+  decrementSpan.addEventListener('click', () => {
+    if (quantity > 1) {
+      quantity--;
+      quantitySpan.textContent = quantity;
+      updateCart(itemData.name, quantity, itemData.price);
+    } else if (quantity == 1) {
+      add.style.display = 'flex';
+      itemSelected.style.display = 'none';
+      img.classList.remove('selected');
+      quantity = 0
+      removeFromCart(itemData.name);
+    }
+  });
+
+  incrementSpan.addEventListener('click', () => {
+    quantity++;
+    quantitySpan.textContent = quantity;
+    updateCart(itemData.name, quantity, itemData.price);
+  });
+}
+
+function updateCart(name, quantity, price) {
+  cartItems[name] = { quantity, price };
+  renderCart();
+}
+
+function removeFromCart(name) {
+  delete cartItems[name];
+  renderCart();
+}
+
+function renderCart() {
+
+  console.log('renderCart called!');
+
+  const cart = document.querySelector('.cart');
+  cart.innerHTML = '<h2>Your Cart <span>(0)</span></h2>';
+
+  const cartTitle = cart.querySelector('h2 span');
+  let totalItems = 0;
+
+  console.log('cartItems', cartItems);
+
+    for (const [name, { quantity, price }] of Object.entries(cartItems)) {
+    if (quantity > 0) {
+      totalItems += quantity;
+      const orderSummary = document.createElement('div');
+      orderSummary.className = 'order-summary';
+      orderSummary.dataset.itemName = name;
+
+      const item1 = document.createElement('div');
+      item1.className = 'item1';
+      item1.textContent = name;
+
+      const item2 = document.createElement('div');
+      item2.className = 'item2';
+      const removeIcon = document.createElement('img');
+      removeIcon.src = '/assets/images/icon-remove-item.svg';
+      removeIcon.alt = 'remove';
+      removeIcon.addEventListener('click', () => {
+        removeFromCart(name);
+      });
+      item2.appendChild(removeIcon);
+
+      const item3 = document.createElement('div');
+      item3.className = 'item3';
+      const quantitySpan = document.createElement('span');
+      quantitySpan.className = 'quantity-span';
+      quantitySpan.textContent = `${quantity}x`;
+      const priceSpan = document.createElement('span');
+      priceSpan.className = 'price-span';
+      priceSpan.textContent = `@$${price.toFixed(2)}`;
+      const totalSpan = document.createElement('span');
+      totalSpan.className = 'total-span';
+      totalSpan.textContent = `$${(quantity * price).toFixed(2)}`;
+      item3.appendChild(quantitySpan);
+      item3.appendChild(priceSpan);
+      item3.appendChild(totalSpan);
+
+      orderSummary.appendChild(item1);
+      orderSummary.appendChild(item2);
+      orderSummary.appendChild(item3);
+      cart.appendChild(orderSummary);
+    }
+  }
+
+  cartTitle.textContent = `(${totalItems})`;
 }
