@@ -142,12 +142,13 @@ h1 {
   width: 100%;
   background-color: #fff;
   border-radius: 10px;
+  padding: 20px;
 }
 
 .cart h2 {
   align-self: flex-start;
   color: var(--red);
-  margin: 0 ;
+  margin: 0;
 
 }
 
