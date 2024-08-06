@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 })
 
-//track items and quantity
 const cartItems = {};
 
 function itemRender(itemData) {
@@ -88,16 +87,13 @@ function itemRender(itemData) {
   list.appendChild(item);
 
 
-let quantity = 1;
+  let quantity = 1;
   add.addEventListener('click', () => {
     add.style.display = 'none';
     itemSelected.style.display = 'flex';
     img.classList.add('selected');
 
-
     quantitySpan.textContent = quantity;
-
-
 
     updateCart(itemData.name, quantity, itemData.price);
   });
@@ -111,7 +107,6 @@ let quantity = 1;
       add.style.display = 'flex';
       itemSelected.style.display = 'none';
       img.classList.remove('selected');
-      quantity = 0
       removeFromCart(itemData.name);
     }
   });
@@ -135,17 +130,14 @@ function removeFromCart(name) {
 
 function renderCart() {
 
-  console.log('renderCart called!');
-
   const cart = document.querySelector('.cart');
   cart.innerHTML = '<h2>Your Cart <span>(0)</span></h2>';
 
   const cartTitle = cart.querySelector('h2 span');
   let totalItems = 0;
+  let totalPrice = 0;
 
-  console.log('cartItems', cartItems);
-
-    for (const [name, { quantity, price }] of Object.entries(cartItems)) {
+  for (const [name, { quantity, price }] of Object.entries(cartItems)) {
     if (quantity > 0) {
       totalItems += quantity;
       const orderSummary = document.createElement('div');
@@ -177,6 +169,7 @@ function renderCart() {
       const totalSpan = document.createElement('span');
       totalSpan.className = 'total-span';
       totalSpan.textContent = `$${(quantity * price).toFixed(2)}`;
+      totalPrice += (quantity * price);
       item3.appendChild(quantitySpan);
       item3.appendChild(priceSpan);
       item3.appendChild(totalSpan);
@@ -184,9 +177,47 @@ function renderCart() {
       orderSummary.appendChild(item1);
       orderSummary.appendChild(item2);
       orderSummary.appendChild(item3);
+
       cart.appendChild(orderSummary);
+       console.log(cartItems);
     }
   }
 
   cartTitle.textContent = `(${totalItems})`;
+
+  if (totalItems > 0) {
+
+  const confirmOrder = document.createElement('div');
+  confirmOrder.className = 'confirm-order';
+
+  const orderTotal = document.createElement('div');
+  orderTotal.className = 'order-total';
+  const orderTotalText = document.createElement('span');
+  orderTotalText.textContent = 'Order Total';
+  const orderTotalAmount = document.createElement('span');
+  orderTotalAmount.textContent = `$${totalPrice.toFixed(2)}`;
+  orderTotal.appendChild(orderTotalText);
+  orderTotal.appendChild(orderTotalAmount);
+
+  const delivery = document.createElement('div');
+  delivery.className = 'delivery';
+  const deliveryIcon = document.createElement('img');
+  deliveryIcon.src = './assets/images/icon-carbon-neutral.svg';
+  deliveryIcon.alt = '';
+  const deliveryText = document.createElement('span');
+  deliveryText.textContent = 'This is a carbon-neutral delivery';
+  delivery.appendChild(deliveryIcon);
+  delivery.appendChild(deliveryText);
+
+  const confirmationButton = document.createElement('div');
+  confirmationButton.className = 'confirmation-button';
+  confirmationButton.textContent = 'Confirm Order';
+
+  confirmOrder.appendChild(orderTotal);
+  confirmOrder.appendChild(delivery);
+  confirmOrder.appendChild(confirmationButton);
+
+  cart.appendChild(confirmOrder);
+}
+
 }
