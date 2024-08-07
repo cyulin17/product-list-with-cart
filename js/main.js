@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 })
 
+const cartItems = {};
+
 function itemRender(itemData) {
   const list = document.querySelector('.list');
 
@@ -26,7 +28,7 @@ function itemRender(itemData) {
   description.className = 'item-description';
   add.className = 'add-to-cart';
   itemSelected.className = 'item-selected';
-  itemSelected.style.display = 'none'; // Hide initially
+  itemSelected.style.display = 'none';
 
   img.src = itemData.image.mobile;
   img.alt = itemData.name;
@@ -39,7 +41,6 @@ function itemRender(itemData) {
   add.appendChild(span);
   add.appendChild(text);
 
-  // Set up item selected section
   const decrementSpan = document.createElement('span');
   const incrementSpan = document.createElement('span');
   const quantitySpan = document.createElement('span');
@@ -58,32 +59,6 @@ function itemRender(itemData) {
   itemSelected.appendChild(decrementSpan);
   itemSelected.appendChild(quantitySpan);
   itemSelected.appendChild(incrementSpan);
-
-    add.addEventListener('click', () => {
-    add.style.display = 'none'; // Hide Add to Cart button
-    itemSelected.style.display = 'flex'; // Show Item Selected section
-    img.classList.add('selected');
-    quantitySpan.textContent = '1';
-  });
-
-  let quantity = 0;
-  decrementSpan.addEventListener('click', () => {
-    if (quantity >= 1) {
-      quantity--;
-      quantitySpan.textContent = quantity;
-    }
-
-    if (quantity == 0) {
-    add.style.display = 'flex';
-    itemSelected.style.display = 'none';
-    img.classList.remove('selected');
-    }
-  });
-
-  incrementSpan.addEventListener('click', () => {
-    quantity++;
-    quantitySpan.textContent = quantity;
-  });
 
   imgBox.appendChild(img);
   imgBox.appendChild(add);
@@ -109,4 +84,164 @@ function itemRender(itemData) {
   item.appendChild(description);
 
   list.appendChild(item);
+
+
+  let quantity = 1;
+  add.addEventListener('click', () => {
+    add.style.display = 'none';
+    itemSelected.style.display = 'flex';
+    img.classList.add('selected');
+
+    quantitySpan.textContent = quantity;
+
+    updateCart(itemData.name, quantity, itemData.price);
+  });
+
+  decrementSpan.addEventListener('click', () => {
+    if (quantity > 1) {
+      quantity--;
+      quantitySpan.textContent = quantity;
+      updateCart(itemData.name, quantity, itemData.price);
+    } else if (quantity == 1) {
+      add.style.display = 'flex';
+      itemSelected.style.display = 'none';
+      img.classList.remove('selected');
+      removeFromCart(itemData.name);
+    }
+  });
+
+  incrementSpan.addEventListener('click', () => {
+    quantity++;
+    quantitySpan.textContent = quantity;
+    updateCart(itemData.name, quantity, itemData.price);
+  });
+}
+
+function updateCart(name, quantity, price) {
+  cartItems[name] = { quantity, price };
+  renderCart();
+}
+
+function removeFromCart(name) {
+  delete cartItems[name];
+  renderCart();
+}
+
+function renderCart() {
+
+  const cart = document.querySelector('.cart');
+  cart.innerHTML = '<h2>Your Cart <span>(0)</span></h2>';
+
+  const cartTitle = cart.querySelector('h2 span');
+  let totalItems = 0;
+  let totalPrice = 0;
+
+  for (const [name, { quantity, price }] of Object.entries(cartItems)) {
+    if (quantity > 0) {
+      totalItems += quantity;
+      const orderSummary = document.createElement('div');
+      orderSummary.className = 'order-summary';
+      orderSummary.dataset.itemName = name;
+
+      const item1 = document.createElement('div');
+      item1.className = 'item1';
+      item1.textContent = name;
+
+      const item2 = document.createElement('div');
+      item2.className = 'item2';
+      const removeIcon = document.createElement('img');
+      removeIcon.src = '/assets/images/icon-remove-item.svg';
+      removeIcon.alt = 'remove';
+      removeIcon.addEventListener('click', () => {
+        removeFromCart(name);
+        const itemElements = document.querySelectorAll('.item');
+        itemElements.forEach((itemElement) => {
+          if (itemElement.querySelector('.item-name').textContent === name) {
+            const add = itemElement.querySelector('.add-to-cart');
+            const itemSelected = itemElement.querySelector('.item-selected');
+            const img = itemElement.querySelector('img');
+            add.style.display = 'flex';
+            itemSelected.style.display = 'none';
+            img.classList.remove('selected');
+          }
+        });
+      });
+      item2.appendChild(removeIcon);
+
+      const item3 = document.createElement('div');
+      item3.className = 'item3';
+      const quantitySpan = document.createElement('span');
+      quantitySpan.className = 'quantity-span';
+      quantitySpan.textContent = `${quantity}x`;
+      const priceSpan = document.createElement('span');
+      priceSpan.className = 'price-span';
+      priceSpan.textContent = `@$${price.toFixed(2)}`;
+      const totalSpan = document.createElement('span');
+      totalSpan.className = 'total-span';
+      totalSpan.textContent = `$${(quantity * price).toFixed(2)}`;
+      totalPrice += (quantity * price);
+      item3.appendChild(quantitySpan);
+      item3.appendChild(priceSpan);
+      item3.appendChild(totalSpan);
+
+      orderSummary.appendChild(item1);
+      orderSummary.appendChild(item2);
+      orderSummary.appendChild(item3);
+
+      cart.appendChild(orderSummary);
+       console.log(cartItems);
+    }
+  }
+
+  cartTitle.textContent = `(${totalItems})`;
+
+  if (totalItems > 0) {
+
+  const confirmOrder = document.createElement('div');
+  confirmOrder.className = 'confirm-order';
+
+  const orderTotal = document.createElement('div');
+  orderTotal.className = 'order-total';
+  const orderTotalText = document.createElement('span');
+  orderTotalText.textContent = 'Order Total';
+  const orderTotalAmount = document.createElement('span');
+  orderTotalAmount.textContent = `$${totalPrice.toFixed(2)}`;
+  orderTotal.appendChild(orderTotalText);
+  orderTotal.appendChild(orderTotalAmount);
+
+  const delivery = document.createElement('div');
+  delivery.className = 'delivery';
+  const deliveryIcon = document.createElement('img');
+  deliveryIcon.src = './assets/images/icon-carbon-neutral.svg';
+  deliveryIcon.alt = '';
+  const deliveryText = document.createElement('span');
+  deliveryText.textContent = 'This is a carbon-neutral delivery';
+  delivery.appendChild(deliveryIcon);
+  delivery.appendChild(deliveryText);
+
+  const confirmationButton = document.createElement('div');
+  confirmationButton.className = 'confirmation-button';
+  confirmationButton.textContent = 'Confirm Order';
+
+  confirmOrder.appendChild(orderTotal);
+  confirmOrder.appendChild(delivery);
+  confirmOrder.appendChild(confirmationButton);
+
+  cart.appendChild(confirmOrder);
+} else {
+
+  const emptyCart = document.createElement('div');
+  emptyCart.className = 'empty-cart';
+  const emptyImg = document.createElement('img');
+  emptyCart.appendChild(emptyImg);
+  emptyImg.src = "./assets/images/illustration-empty-cart.svg";
+  const cartMessage = document.createElement('div');
+  cartMessage.class = 'empty-cart-message';
+  cartMessage.innerHTML = 'Your added items will appear here';
+
+  cart.appendChild(emptyCart);
+  cart.appendChild(cartMessage);
+
+}
+
 }
