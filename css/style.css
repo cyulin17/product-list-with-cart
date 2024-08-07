@@ -19,6 +19,10 @@ body {
   background-color: var(--rose-50);
 }
 
+.add-to-cart, .item-selected span img {
+  cursor: pointer;
+}
+
 .main-wrapper {
   margin: 0 20px;
 }
@@ -60,6 +64,11 @@ h1 {
   align-items: center;
   justify-content: center;
   justify-self: center;
+}
+
+.add-to-cart:hover{
+  border: 1px solid var(--red);
+  color: var(--red);
 }
 
 .item-selected {
@@ -149,10 +158,6 @@ h1 {
   align-self: flex-start;
   color: var(--red);
   margin: 0;
-}
-
-.cart div {
-  padding: 25px 0;
 }
 
 .empty-cart-message {
@@ -277,4 +282,12 @@ h1 {
 
 .hidden {
   display: none;
+}
+
+.decrement:hover, .increment:hover {
+ background-color: #fff;
+}
+
+.decrement:hover img, .increment:hover img {
+  filter: invert(30%);
 }

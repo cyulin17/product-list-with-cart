@@ -42,7 +42,9 @@ function itemRender(itemData) {
   add.appendChild(text);
 
   const decrementSpan = document.createElement('span');
+  decrementSpan.className = 'decrement';
   const incrementSpan = document.createElement('span');
+  incrementSpan.className = 'increment';
   const quantitySpan = document.createElement('span');
 
   const decrementIcon = document.createElement('img');
