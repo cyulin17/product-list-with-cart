@@ -149,7 +149,10 @@ h1 {
   align-self: flex-start;
   color: var(--red);
   margin: 0;
+}
 
+.cart div {
+  padding: 25px 0;
 }
 
 .empty-cart-message {
